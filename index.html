@@ -519,8 +519,66 @@
     #dash-hoje-grid, #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
   }
   @media (max-width: 800px) {
-    #dash-hoje-grid, #dash-extra-grid { grid-template-columns: 1fr !important; }
-    .content { padding: 16px !important; }
+    #dash-hoje-grid, #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
+    .content { padding: 14px !important; }
+    .topbar { padding: 12px 14px !important; }
+    .topbar .page-title { font-size: 16px !important; }
+    .topbar .page-sub { font-size: 11px !important; }
+    /* Tabelas: scroll horizontal */
+    .card-body table, table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    /* Grids viram coluna única */
+    [style*="grid-template-columns:1fr 1fr 1fr"], [style*="grid-template-columns: 1fr 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    [style*="grid-template-columns:2fr 1fr"], [style*="grid-template-columns: 2fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  @media (max-width: 600px) {
+    #dash-hoje-grid, #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
+    .content { padding: 12px !important; }
+    /* Sidebar escondida por padrão no mobile */
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+      z-index: 200 !important;
+      box-shadow: 4px 0 24px rgba(0,0,0,.18);
+    }
+    .sidebar.aberta {
+      transform: translateX(0);
+    }
+    /* Main ocupa tela toda */
+    .main {
+      margin-left: 0 !important;
+    }
+    /* Botão hamburguer */
+    #btn-menu-mobile {
+      display: flex !important;
+    }
+    /* Overlay escuro atrás do menu */
+    #overlay-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 199;
+    }
+    #overlay-menu.ativo {
+      display: block;
+    }
+    /* Topbar com espaço para hamburguer */
+    .topbar {
+      padding-left: 56px !important;
+    }
+    /* Cards lado a lado menores */
+    #dash-hoje-grid { grid-template-columns: 1fr 1fr !important; }
+    #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
+    /* Botões maiores para toque */
+    .btn { min-height: 40px; }
+    /* Formulários full width */
+    .form-row input, .form-row select, .form-row textarea {
+      font-size: 16px !important; /* evita zoom no iOS */
+    }
   }
 
 </style>
@@ -577,7 +635,16 @@
 
 <div class="app">
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <!-- Overlay mobile -->
+<div id="overlay-menu" onclick="fecharMenuMobile()"></div>
+
+<!-- Botão hamburguer (só mobile) -->
+<button id="btn-menu-mobile" onclick="toggleMenuMobile()"
+  style="display:none;position:fixed;top:12px;left:12px;z-index:300;background:var(--accent);border:none;border-radius:10px;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)">
+  <span style="font-size:18px;color:#fff">☰</span>
+</button>
+
+<aside class="sidebar">
     <div class="logo">
       <div class="logo-name">GestãoLoja</div>
       <div class="logo-sub">Sistema Completo</div>
@@ -3228,6 +3295,7 @@ function dataLocalVenda(v) {
 
 // ===== NAVIGATION =====
 function showPage(id) {
+  fecharMenuMobile();
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
@@ -9548,6 +9616,27 @@ setInterval(function() {
 setTimeout(alertaCaixaAberto, 5000);
 
 // ===== FIREBASE AUTH FUNCTIONS =====
+function toggleMenuMobile() {
+  var sidebar  = document.querySelector('.sidebar');
+  var overlay  = document.getElementById('overlay-menu');
+  if (!sidebar) return;
+  var aberta = sidebar.classList.contains('aberta');
+  if (aberta) {
+    sidebar.classList.remove('aberta');
+    if (overlay) overlay.classList.remove('ativo');
+  } else {
+    sidebar.classList.add('aberta');
+    if (overlay) overlay.classList.add('ativo');
+  }
+}
+
+function fecharMenuMobile() {
+  var sidebar = document.querySelector('.sidebar');
+  var overlay = document.getElementById('overlay-menu');
+  if (sidebar) sidebar.classList.remove('aberta');
+  if (overlay) overlay.classList.remove('ativo');
+}
+
 function fazerLogin() {
   var email = (document.getElementById('login-email')?.value||'').trim();
   var senha = document.getElementById('login-senha')?.value||'';

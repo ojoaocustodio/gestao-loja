@@ -204,6 +204,13 @@
   /* CONTENT */
   .content { padding: 28px; flex: 1; min-width: 0; overflow-x: hidden; }
 
+  /* Dashboard grids default (desktop) */
+  #dash-numeros-dia { grid-template-columns: repeat(4,1fr); }
+  #dash-extra-grid  { grid-template-columns: repeat(4,1fr); }
+
+  /* Precificacao grid responsivo */
+  .grid-prec { grid-template-columns: 1fr 1fr; }
+
   /* CARDS */
   .card {
     background: var(--surface);
@@ -518,67 +525,94 @@
   @media (max-width: 1200px) {
     #dash-hoje-grid, #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
   }
-  @media (max-width: 800px) {
-    #dash-hoje-grid, #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
-    .content { padding: 14px !important; }
-    .topbar { padding: 12px 14px !important; }
-    .topbar .page-title { font-size: 16px !important; }
-    .topbar .page-sub { font-size: 11px !important; }
-    /* Tabelas: scroll horizontal */
-    .card-body table, table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    /* Grids viram coluna única */
-    [style*="grid-template-columns:1fr 1fr 1fr"], [style*="grid-template-columns: 1fr 1fr 1fr"] {
-      grid-template-columns: 1fr !important;
-    }
-    [style*="grid-template-columns:2fr 1fr"], [style*="grid-template-columns: 2fr 1fr"] {
-      grid-template-columns: 1fr !important;
+  /* ===== TABLET ===== */
+  @media (max-width: 900px) {
+    .content { padding: 16px !important; }
+    /* Grids de 3+ colunas viram 2 */
+    [style*="grid-template-columns:1fr 1fr 1fr"],
+    [style*="grid-template-columns: 1fr 1fr 1fr"],
+    [style*="grid-template-columns:repeat(3,1fr)"],
+    [style*="grid-template-columns:repeat(4,1fr)"] {
+      grid-template-columns: 1fr 1fr !important;
     }
   }
+
+  /* ===== MOBILE ===== */
   @media (max-width: 600px) {
-    #dash-hoje-grid, #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
-    .content { padding: 12px !important; }
-    /* Sidebar escondida por padrão no mobile */
+    /* ----- SIDEBAR ----- */
     .sidebar {
       transform: translateX(-100%);
       transition: transform 0.28s cubic-bezier(.4,0,.2,1);
       z-index: 200 !important;
       box-shadow: 4px 0 24px rgba(0,0,0,.18);
     }
-    .sidebar.aberta {
-      transform: translateX(0);
-    }
-    /* Main ocupa tela toda */
-    .main {
-      margin-left: 0 !important;
-    }
-    /* Botão hamburguer */
-    #btn-menu-mobile {
-      display: flex !important;
-    }
-    /* Overlay escuro atrás do menu */
+    .sidebar.aberta { transform: translateX(0); }
+
+    /* ----- LAYOUT ----- */
+    .main { margin-left: 0 !important; }
+    .content { padding: 12px 10px !important; overflow-x: hidden !important; }
+    .topbar { padding: 10px 12px 10px 56px !important; }
+    .topbar .page-title { font-size: 15px !important; }
+    .topbar .page-sub   { font-size: 11px !important; }
+
+    /* ----- HAMBURGUER ----- */
+    #btn-menu-mobile { display: flex !important; }
+
+    /* ----- OVERLAY ----- */
     #overlay-menu {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.45);
-      z-index: 199;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.45); z-index: 199;
     }
-    #overlay-menu.ativo {
-      display: block;
+    #overlay-menu.ativo { display: block; }
+
+    /* ----- TODOS OS GRIDS VIRAM 1 COLUNA ----- */
+    [style*="display:grid"],
+    [style*="display: grid"] {
+      grid-template-columns: 1fr !important;
     }
-    /* Topbar com espaço para hamburguer */
-    .topbar {
-      padding-left: 56px !important;
+
+    /* ----- EXCETO cards do dashboard que ficam 2x2 ----- */
+    #dash-numeros-dia,
+    #dash-extra-grid {
+      grid-template-columns: 1fr 1fr !important;
     }
-    /* Cards lado a lado menores */
-    #dash-hoje-grid { grid-template-columns: 1fr 1fr !important; }
-    #dash-extra-grid { grid-template-columns: 1fr 1fr !important; }
-    /* Botões maiores para toque */
-    .btn { min-height: 40px; }
-    /* Formulários full width */
-    .form-row input, .form-row select, .form-row textarea {
-      font-size: 16px !important; /* evita zoom no iOS */
+    /* Precificacao: coluna única */
+    .grid-prec { grid-template-columns: 1fr !important; }
+
+    /* ----- TABELAS scroll horizontal ----- */
+    .card-body, .content {
+      overflow-x: hidden !important;
     }
+    table {
+      display: block !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      max-width: 100% !important;
+    }
+
+    /* ----- INPUTS sem zoom no iOS ----- */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+
+    /* ----- BOTÕES touch-friendly ----- */
+    .btn { min-height: 42px !important; }
+
+    /* ----- MODAIS full screen no mobile ----- */
+    .modal-box {
+      width: 96vw !important;
+      max-width: 96vw !important;
+      max-height: 90vh !important;
+      overflow-y: auto !important;
+      margin: 0 !important;
+    }
+
+    /* ----- TOPBAR botões menores ----- */
+    .topbar .btn { padding: 8px 12px !important; font-size: 12px !important; }
+
+    /* ----- CARDS sem padding excessivo ----- */
+    .card-body { padding: 12px !important; }
+    .card-header { padding: 12px 14px !important; }
   }
 
 </style>
@@ -761,7 +795,7 @@
       </div>
       <div class="content">
         <div id="dash-alertas" style="margin-bottom:16px"></div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px" id="dash-numeros-dia"></div>
+        <div style="display:grid;gap:14px;margin-bottom:20px" id="dash-numeros-dia"></div>
         <div class="card" style="margin-bottom:20px" id="dash-meta-card">
           <div class="card-body" style="padding:16px 20px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
@@ -772,7 +806,7 @@
           </div>
         </div>
         <!-- CARDS EXTRAS: ESTOQUE + POTENCIAL + TICKET PRODUTO -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px" id="dash-extra-grid">
+        <div style="display:grid;gap:12px;margin-bottom:16px" id="dash-extra-grid">
           <div class="card" style="margin:0;border-left:4px solid #f59e0b">
             <div class="card-body" style="padding:14px 16px">
               <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">💰 Total Já Investido</div>
@@ -1196,7 +1230,7 @@
         <button class="btn btn-primary" onclick="abrirModalProdutoDaPreco()">+ Adicionar como Produto</button>
       </div>
       <div class="content">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" class="grid-prec">
 
           <!-- COLUNA ESQUERDA - INPUTS -->
           <div style="display:flex;flex-direction:column;gap:16px">
